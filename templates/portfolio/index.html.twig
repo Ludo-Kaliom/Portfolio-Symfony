@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+    <div class="container">
+        <h1>Ludovic Païni-Kaffin</h1>
+        <div class="project_presentation">
+            <div class="presentation_text">
+                <h2>{{ presentation.title }}</h2>
+                <p class="p1">{{ presentation.description|raw }}</p>  
+            </div>
+            <div class="presentation_image">
+                <img class="image" src="images/clavier.jpg" alt="clavier" />
+                <div class="img_contact">
+                    <a href="mailto:{{presentation.mail}}"><img src="images/email.png" alt="mail"></a>
+                    <a href="{{presentation.cv}}" download><img src="images/cv.png" alt="cv"></a>
+                    <a href="{{presentation.linkedin}}"><img src="images/linkedin.png" alt="linkedin"></a>
+                    <a href="{{presentation.github}}"><img src="images/github.png"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    {% if presentation.news is not null %}
+        <div class="container">
+            <h1>Actualités</h1>
+                <p class="p1">{{ presentation.news|raw }}</p>  
+        </div>
+    {% endif %}
+    <hr>
+    <div class="container">
+        <h1>Portfolio</h1>
+        <div class="project_links" id="links">
+        </div>
+        <div class="portfolio" id="js-portfolio">
+            {% for projet in projects %}
+                <div class="project js-item <?php echo $result->content_category ?>" tabindex="0">
+                    <img src="{{asset (vich_uploader_asset (projet, 'imageFiles'))}}" alt='{{ projet.title }}' class="project_image">
+                    <h3 class="project_name">{{ projet.title }}</h3>
+                    <div class="project_description js-description">
+                        {{ projet.shortDescription }}
+                    </div>
+                    <div class="project_body js-body">
+                    <hr>
+                        <h2>{{ projet.subtitle }}</h2>
+                        <h4>{{ projet.category }}</h4>
+                        <p class="p1">{{ projet.item|raw }}</p>
+                        <hr>
+                        <div class="project_techno">
+                            <p class="p1">En savoir plus => <button type="button" onclick="window.location.href='{{ projet.siteLink }}';" class="btn btn-dark">{{ projet.siteLabel }}</button> </p>
+                            <p class="p1">Technologies utilisées => {% for technologie in projet.technologies %} <span class="techno">{{ technologie.title }} </span>{% endfor %} </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <h1>Compétences et technologies</h1>
+        <div class="skills">
+            {% for skill in skills %}
+            <div class="presentation_skill">
+                <img class="img_skill" src="{{asset (vich_uploader_asset (skill, 'imageFiles'))}}" alt="écran statistique">
+                <h5 class="mt-0 mb-1">{{ skill.title }}</h5>
+                <p class="p1">{{ skill.shortDescription }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <hr>
+    <div class="container">
+        <h1>Contactez-moi !</h1>
+        <p class="p1">Une question ? Une zone d’ombre à éclaircir ? Envie de collaborer avec moi ? N’hésitez pas à me contacter via ce formulaire !</p>       
+        {{ form_start(form) }}
+        {{ form_rest(form) }}
+            <button class="btn btn-primary">{{ button|default('Envoyer le message') }}</button>
+        {{ form_end(form) }}
+    </div>
+    <hr>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title "Connexion" %}
+
+{% block body %}
+    <div class="container py-5 py-md-7">
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6 col-lg-5 mb-5 mb-md-0">
+                {% if error %}
+                    <div class="alert alert-danger">
+                        {{ error.messageKey|trans(error.messageData, 'security') }}
+                    </div>
+                {% endif %}
+                <div class="bg-secondary px-4 py-5 p-sm-5 rounded-3">
+                    <h1 class="h3 pt-1">Connexion</h1>
+                    <p class="fs-ms text-muted">Connectez-vous en utilisant votre email et votre password</p>
+                    <form class="needs-validation" method="post">
+                        <div class="input-group mb-3"><i class="ai-mail position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                            <input class="form-control rounded" type="email" placeholder="Email" value="{{ last_username }}" name="_username" id="username" autocomplete="email" required autofocus>
+                        </div>
+                        <div class="input-group mb-3"><i class="ai-lock position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+                            <div class="password-toggle w-100">
+                                <input class="form-control" type="password" placeholder="Password" name="_password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
+                        </div>
+                        <div class="div">
+                            <input type="hidden" name="_csrf_token"value="{{ csrf_token('authenticate') }}">
+                        </div>
+                            <button class="btn btn-primary d-block w-100" type="submit">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
