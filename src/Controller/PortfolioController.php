@@ -12,11 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+//mail
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class PortfolioController extends AbstractController
 {
     #[Route('/', name: 'app_portfolio')]
-    public function index(ProjectsRepository $projectsRepository, SkillsRepository $skillsRepository, PresentationRepository $presentationRepository, EntityManagerInterface $em, Request $request): Response
+    public function index(MailerInterface $mailer, ProjectsRepository $projectsRepository, SkillsRepository $skillsRepository, PresentationRepository $presentationRepository, EntityManagerInterface $em, Request $request): Response
     {
         $contact = new Contact();
         $form = $this->createForm(ContactType::class, $contact);
@@ -26,6 +29,30 @@ class PortfolioController extends AbstractController
                 $em->persist($contact);
                 $em->flush();
                 $this->addFlash('success', 'Votre message a bien été envoyé, je vais vous recontacter très rapidement');
+                
+                $fd = $form->getData();               
+                
+                $mailText='Message de ' .$fd->getName(). ' ('. $fd->getEmail() .")\r\n  
+                ".$fd->getMessage();
+                
+              $email = (new Email())  
+              ->from('sender@example.com')
+              ->to('receiver@example.com')
+              //->cc('cc@example.com')
+              //->bcc('bcc@example.com')
+              //->replyTo('fabien@example.com')
+              //->priority(Email::PRIORITY_HIGH)
+              ->subject($fd->getTopic() )
+              ->text($mailText)
+              ->html('<p>'. nl2br($mailText) .'</p>');
+
+              try {
+                $mailer->send($email);
+              } catch (TransportExceptionInterface $e) {
+              // some error prevented the email sending; display an
+              // error message or try to resend the message
+              $this->addFlash('error', 'erreur lors de l\'envoi du mail' . $e);
+              }
             }
 
         return $this->render('portfolio/index.html.twig', [
