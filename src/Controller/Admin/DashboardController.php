@@ -8,6 +8,7 @@ use App\Entity\Technologies;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Controller\Admin\ProjectsCrudController;
+use App\Entity\Contact;
 use App\Entity\Presentation;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -51,5 +52,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Projets', 'fas fa-briefcase', Projects::class);
         yield MenuItem::linkToCrud('Technologies', 'fas fa-briefcase', Technologies::class);
         yield MenuItem::linkToCrud('Compétences', 'fas fa-briefcase', Skills::class);
+        yield MenuItem::linkToCrud('Contacts', 'fas fa-briefcase', Contact::class);
     }
 }
